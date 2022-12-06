@@ -7,7 +7,7 @@ const {
   forgotPassword,
   resetPassword,
   verifyOtp,
-  getUser,
+  getUser
 } = require("../controller/authController.js");
 
 const jwtAuth = require("../middlewares/jwtAuth.js");
@@ -18,7 +18,6 @@ authRouter.get("/logout", logout);
 authRouter.post("/forgotPassword", forgotPassword);
 authRouter.post("/resetPassword/:forgetPasswordToken", resetPassword);
 authRouter.post("/verifyOtp", verifyOtp);
-
 authRouter.get("/user", jwtAuth, getUser);
 
 module.exports = authRouter;
