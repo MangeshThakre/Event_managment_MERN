@@ -1,12 +1,18 @@
 const express = require("express");
 const eventRouter = express.Router();
-const { addEvent, getEvent } = require("../controller/eventController.js");
+const {
+  addEvent,
+  getEvent,
+  getEvents
+} = require("../controller/eventController.js");
 const cloudinaryImageUpload = require("../middlewares/cloudinaryImageUpload");
 const jwtAuth = require("../middlewares/jwtAuth.js");
 
 eventRouter
   .route("/event")
-  .get(jwtAuth, getEvent)
-  .post(jwtAuth, cloudinaryImageUpload, addEvent);
+  .post(jwtAuth, cloudinaryImageUpload, addEvent)
+  .get(getEvent);
+
+eventRouter.get("/events", jwtAuth, getEvents);
 
 module.exports = eventRouter;

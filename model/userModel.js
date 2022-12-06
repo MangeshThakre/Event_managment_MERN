@@ -9,28 +9,28 @@ const userSchema = new Schema(
     firstName: {
       type: String,
       required: [true, "Name is required"],
-      maxLength: [50, "First must be less than 50 characters"],
+      maxLength: [50, "First must be less than 50 characters"]
     },
     lastName: {
       type: String,
       required: [true, "lastName is requierd"],
-      maxLength: [50, "LastName be less than 50 characters"],
+      maxLength: [50, "LastName be less than 50 characters"]
     },
     email: {
       type: String,
       required: [true, "Email is required"],
-      unique: true,
+      unique: true
     },
     password: {
       type: String,
       required: [true, "password is required"],
       minLength: [8, "password must be at least 8 characters"],
-      select: false,
+      select: false
     },
     forgetPasswordToken: String,
     forgetPasswordExpiry: Date,
     hashOtp: String,
-    otpExpiry: Date,
+    otpExpiry: Date
   },
   { timestamps: true }
 );
@@ -42,7 +42,7 @@ userSchema.methods = {
 
   generateJwtToken: function () {
     return JWT.sign({ _id: this._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRY,
+      expiresIn: process.env.JWT_EXPIRY
     });
   },
 
@@ -51,7 +51,7 @@ userSchema.methods = {
     this.forgetPasswordExpiry = new Date(Date.now() + 20 * 60 * 1000); // 20min
     this.forgetPasswordToken = forgetPasswordToken;
     return forgetPasswordToken;
-  },
+  }
 };
 
 const userModel = mongoose.model("user", userSchema);

@@ -36,6 +36,8 @@ const addEvent = async (req, res, next) => {
     publishDate: new Date(publishDate)
   });
 
+  const EventUrl = `${CLIENT_URL}/api/window?userId=${eventInfo._id}`;
+
   try {
     const newEvent = await eventInfo.save();
     res.status(200).json({ success: true, data: newEvent });
@@ -71,6 +73,25 @@ const editEvent = async (req, res, next) => {
 };
 
 const getEvent = async (req, res, next) => {
+  const { eventId } = req.query;
+  if (!eventId) return next(new CustomError("Event Id is Required", 400));
+  try {
+    const event = await eventModel.findById(eventId);
+    res.status(200).json({ success: true, data: event });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/******************************************************
+ * @getEvents
+ * @route http://localhost:8081/api/addEvents
+ * @description create new event
+ * @parameters to(date) ,from(date) , search , page, limeit ,city
+ * @returns success message , filtered events data object
+ ******************************************************/
+
+const getEvents = async (req, res, next) => {
   const { search, from, to, page, limit, city } = req.query;
   const filterQuery = {};
   if (search) filterQuery["$text"] = { $search: search };
@@ -84,4 +105,4 @@ const getEvent = async (req, res, next) => {
   }
 };
 
-module.exports = { addEvent, editEvent, getEvent };
+module.exports = { addEvent, editEvent, getEvent, getEvents };
