@@ -6,7 +6,7 @@ const CustomError = require("../utils/custonErrorHandler.js");
  * @addEvent
  * @route http://localhost:8081/api/addEvent
  * @description create new event
- * @parameters
+ * @formData  title, description, email,  city, address, organizerName, status, publishDate, images(min-1, max-4)
  * @returns success message , event data object
  ******************************************************/
 
@@ -36,11 +36,11 @@ const addEvent = async (req, res, next) => {
     publishDate: new Date(publishDate)
   });
 
-  const EventUrl = `${CLIENT_URL}/api/window?userId=${eventInfo._id}`;
+  const eventUrl = `${process.env.CLIENT_URL}/api/window?userId=${eventInfo._id}`;
 
   try {
     const newEvent = await eventInfo.save();
-    res.status(200).json({ success: true, data: newEvent });
+    res.status(200).json({ success: true, data: newEvent, link: eventUrl });
   } catch (error) {
     return next(error);
   }
@@ -72,6 +72,14 @@ const editEvent = async (req, res, next) => {
   //   }
 };
 
+/******************************************************
+ * @getEvent
+ * @route http://localhost:8081/api/getEvent
+ * @description get single event
+ * @querys eventId
+ * @returns success message , event data object
+ ******************************************************/
+
 const getEvent = async (req, res, next) => {
   const { eventId } = req.query;
   if (!eventId) return next(new CustomError("Event Id is Required", 400));
@@ -86,8 +94,8 @@ const getEvent = async (req, res, next) => {
 /******************************************************
  * @getEvents
  * @route http://localhost:8081/api/addEvents
- * @description create new event
- * @parameters to(date) ,from(date) , search , page, limeit ,city
+ * @description  get filtered event
+ * @query to(date) ,from(date) , search , page, limeit ,city
  * @returns success message , filtered events data object
  ******************************************************/
 
