@@ -1,7 +1,7 @@
 const CustomError = require("../utils/custonErrorHandler");
 const cloudinary = require("../config/cloudinary.config.js");
 
-const clouninaryImageUpload = async (req, res, next) => {
+const cloudinaryImageUpload = async (req, res, next) => {
   const files = req.files;
   if (!files)
     return next(new CustomError("At least one image is required", 400));
@@ -25,4 +25,4 @@ const clouninaryImageUpload = async (req, res, next) => {
   }
 };
 
-module.exports = clouninaryImageUpload;
+module.exports = cloudinaryImageUpload;

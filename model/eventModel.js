@@ -16,6 +16,7 @@ const eventSchema = new Schema(
     },
     email: { type: String, required: [true, "Email is Required"] },
     address: { type: String, required: [true, "Address is Required"] },
+    city: { type: String, required: [true, "City is Required"] },
     organizerName: {
       type: String,
       required: [true, "OrginazerName is Require"]
@@ -39,8 +40,9 @@ const eventSchema = new Schema(
       required: [true, "Publish Date and Time is Required"]
     }
   },
-  { timeStaps: true }
+  { timestamps: true }
 );
 
+eventSchema.index({ title: "text" });
 const eventModel = mongoose.model("event", eventSchema);
 module.exports = eventModel;
