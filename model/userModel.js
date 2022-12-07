@@ -27,8 +27,8 @@ const userSchema = new Schema(
       minLength: [8, "password must be at least 8 characters"],
       select: false
     },
-    forgetPasswordToken: String,
-    forgetPasswordExpiry: Date,
+    forgotPasswordToken: String,
+    forgotPasswordExpiry: Date,
     hashOtp: String,
     otpExpiry: Date
   },
@@ -46,11 +46,11 @@ userSchema.methods = {
     });
   },
 
-  generateForgetPasswordToken: function () {
-    const forgetPasswordToken = crypto.randomBytes(64).toString("hex");
-    this.forgetPasswordExpiry = new Date(Date.now() + 20 * 60 * 1000); // 20min
-    this.forgetPasswordToken = forgetPasswordToken;
-    return forgetPasswordToken;
+  generateForgotPasswordToken: function () {
+    const forgotPasswordToken = crypto.randomBytes(64).toString("hex");
+    this.forgotPasswordExpiry = new Date(Date.now() + 20 * 60 * 1000); // 20min
+    this.forgotPasswordToken = forgotPasswordToken;
+    return forgotPasswordToken;
   }
 };
 

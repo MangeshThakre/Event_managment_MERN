@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 
 function AddEvent({ setToggleAddEvent }) {
+  function handleSubmit() {}
   return (
     <div className="absolute  w-[100%] h-[100vh]  left-0 top-0  flex  justify-end  bg-[#17171994] z-40">
       {/* component */}
-      <div className="w-[28rem]  bg-[#f6f6f8] h-full">
+      <div className="w-[30rem]  bg-[#f6f6f8] h-full">
+        {/* header */}
         <div className="flex items-center justify-between bg-white  px-6 h-14">
           <p className="text-gray-700  font-semibold">Create Event</p>
           <div
@@ -25,6 +27,189 @@ function AddEvent({ setToggleAddEvent }) {
             </svg>
           </div>
         </div>
+        {/* header end */}
+        {/* form */}
+        <form className="space-y-6  px-6  py-8" onSubmit={() => handleSubmit()}>
+          {/* title */}
+          <div className="flex  items-center  gap-2">
+            <label
+              htmlFor="title"
+              className="block md:w-28 text-start mb-1 text-sm font-medium text-gray-800"
+            >
+              Event Title
+            </label>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              className="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  placeholder-gray-400 "
+              placeholder="Enter Title"
+              required
+            />
+          </div>
+          {/* title end */}
+          {/* descriotion */}
+          <div className="flex  items-center  gap-2">
+            <label
+              htmlFor="Description"
+              className="block md:w-28 text-start mb-1 text-sm font-medium text-gray-800"
+            >
+              Description
+            </label>
+            <textarea
+              type="text"
+              id="Description"
+              className="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  placeholder-gray-400 "
+              placeholder="Enter Description"
+              required
+            />
+          </div>
+          {/* description end */}
+          {/* emaail */}
+          <div className="flex  items-center  gap-2">
+            <label
+              htmlFor="email"
+              className="block md:w-28 text-start mb-1 text-sm font-medium text-gray-800"
+            >
+              E-Mail
+            </label>
+            <input
+              type="text"
+              id="email"
+              className="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  placeholder-gray-400 "
+              placeholder="Enter Email Id"
+              required
+            />
+          </div>
+          {/* email end */}
+          {/* Phone */}
+          <div className="flex  items-center  gap-2">
+            <label
+              htmlFor="phoneNo"
+              className="block md:w-28 text-start mb-1 text-sm font-medium text-gray-800"
+            >
+              Phone
+            </label>
+            <input
+              type="number"
+              id="phoneNo"
+              className="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  placeholder-gray-400 "
+              placeholder="Enter Phone Number"
+              required
+              maxLength="10"
+              minLength="10"
+            />
+          </div>
+          {/* phone */}
+          {/* adderss */}
+          <div className="flex  items-center  gap-2">
+            <label
+              htmlFor="adderss"
+              className="block md:w-28 text-start mb-1 text-sm font-medium text-gray-800"
+            >
+              Adderss
+            </label>
+            <input
+              type="text"
+              id="adderss"
+              className="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  placeholder-gray-400 "
+              placeholder="Enter Adderss"
+              required
+              autoComplete="off"
+            />
+          </div>{" "}
+          {/* Adderss end */}
+          {/* city */}
+          <div className="flex  items-center  gap-2">
+            <label
+              htmlFor="city"
+              className="block md:w-28 text-start mb-1 text-sm font-medium text-gray-800"
+            >
+              City
+            </label>
+            <input
+              type="text"
+              id="city"
+              className="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  placeholder-gray-400 "
+              placeholder="Enter City"
+              required
+              autoComplete="off"
+            />
+          </div>
+          {/* city  end*/}
+          {/*  Organizer Name */}
+          <div className="flex  items-center  gap-2">
+            <label
+              htmlFor="OrgName"
+              className="block md:w-28 text-start mb-1 text-sm font-medium text-gray-800"
+            >
+              Organizer Name
+            </label>
+            <input
+              type="text"
+              id="OrgName"
+              className="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  placeholder-gray-400 "
+              placeholder="Enter Organizer Name"
+              required
+              autoComplete="off"
+            />
+          </div>
+          {/*  Organizer Name  end*/}
+          {/*  status */}
+          <div className="flex items-center">
+            <label
+              htmlFor="status"
+              className="block md:w-28 text-start mb-1 text-sm font-medium text-gray-800"
+            >
+              Status
+            </label>
+            <label class="inline-flex relative items-center  cursor-pointer">
+              <input
+                id="status"
+                type="checkbox"
+                value=""
+                class="sr-only peer"
+              />
+
+              <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300  rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all border-gray-600 peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+          {/*  end status */}
+          {/* date and time */}
+          <div className="flex  items-center  gap-2">
+            <label
+              htmlFor="publish"
+              className="block md:w-28 text-start mb-1 text-sm font-medium text-gray-800"
+            >
+              Publish Date and time
+            </label>
+            <input
+              type="date-time"
+              id="publish"
+              className="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  placeholder-gray-400 "
+              placeholder="Select Date and Time"
+              required
+              autoComplete="off"
+            />
+          </div>
+          {/* date and time end */}
+          <div className="flex gap-6 justify-center items-center md:px-20   mt-4">
+            <button
+              onClick={() => setToggleAddEvent(false)}
+              type="submit"
+              className="w-full text-[#283895] bg-white border-[#283895]  border-[1px] hover:bg-gray-100  focus:ring-4 focus:outline-none focus:ring-gray-100    font-semibold rounded-lg text-sm px-5 py-2.5 text-center"
+            >
+              Cancle
+            </button>
+            <button
+              type="submit"
+              className="w-full text-white bg-[#283895] hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+        {/* form end */}
       </div>
     </div>
   );

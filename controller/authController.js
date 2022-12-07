@@ -8,22 +8,31 @@ const bcrypt = require("bcrypt");
  * @REGISTER
  * @route http://localhost:8081/api/auth/register
  * @description User register Controller for creating new user
- * @parameters firstname , lastname,  email, password
+ * @body firstname , lastname,  email, password ,comfirmPassword
  * @returns User Object
  ******************************************************/
 
 const register = async (req, res, next) => {
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email, password, confirmPassword } = req.body;
+
+  if (password !== confirmPassword) {
+    return next(
+      new CustomError("password and confirmPassword not matched", 400)
+    );
+  }
+
   try {
     const hashPass = await bcrypt.hash(password, 10);
     const userInfo = new userModel({
       firstName,
       lastName,
       email,
-      password: hashPass,
+      password: hashPass
     });
     const result = await userInfo.save();
-    res.status(200).json({ success: true, data: result });
+    res
+      .status(200)
+      .json({ success: true, message: "successfuly resisterd new user " });
   } catch (error) {
     next(error);
   }
@@ -45,14 +54,18 @@ const login = async (req, res, next) => {
   }
   try {
     const user = await userModel.findOne({ email }).select("+password");
+
+    // check user exist
     if (!user) {
       return next(new CustomError("User Not Found ", 404));
     }
 
-    const isPasswordCorrect = user.comparePassword(password);
+    // check password is correct
+    const isPasswordCorrect = await user.comparePassword(password);
     if (!isPasswordCorrect) {
       return next(new CustomError("Invalid credentials", 400));
     }
+    console.log(isPasswordCorrect);
 
     const expiryDate = new Date(Date.now() + 2 * 60 * 1000); // 2min
     const OTP = Math.floor(Math.random() * 9999).toString();
@@ -61,14 +74,16 @@ const login = async (req, res, next) => {
     user.hashOtp = hashOtp;
     user.otpExpiry = expiryDate;
 
+    // create mail content
     const mailOptions = {
       from: process.env.EMAIL_ID,
       to: user.email,
       subject: "Event managment Login OTP",
       html: `<b>Hello ${user.firstName}  ${user.lastName}</b><br>
-         <p>here is your login OTP : ${OTP}  do not share the otp to any one</p>`,
+         <p>here is your login OTP : ${OTP}  do not share the otp to any one</p>`
     };
 
+    // send mail
     transporter.sendMail(mailOptions, async (error, info) => {
       if (error) {
         user.hashOtp = user.otpExpiry = undefined;
@@ -79,7 +94,7 @@ const login = async (req, res, next) => {
         res.status(200).json({
           success: true,
           message: `OTP sent to ${user.email}`,
-          expiryDate,
+          expiryDate
         });
       }
     });
@@ -140,7 +155,7 @@ const verifyOtp = async (req, res, next) => {
 const logout = async (req, res, next) => {
   res.cookie("Token", null, {
     expires: new Date(Date.now()),
-    httpOnly: true,
+    httpOnly: true
   });
   res.status(200).json({ success: true, message: "Logged Out" });
 };
@@ -149,7 +164,7 @@ const logout = async (req, res, next) => {
  * @FORGETPASSWORD
  * @route http://localhost:8081/api/auth/forgotPassword
  * @description send email to user
- * @parameters
+ * @body email
  * @returns success message , send reset password mail with reset url
  ******************************************************/
 
@@ -157,28 +172,31 @@ const forgotPassword = async (req, res, next) => {
   const { email } = req.body;
   if (!email) return next(new CustomError("Email is Required", 400));
   try {
+    // check user
     const user = await userModel.findOne({ email });
-    if (!user) return new CustomError("User Not Found", 404);
+    if (!user) return next(new CustomError("User Not Found", 404));
 
-    const forgetPasswordToken = user.generateForgetPasswordToken();
+    // generate  forgotToken ,  fotGotTokenExp date and store in data base
+    const forgotPasswordToken = user.generateForgotPasswordToken();
     await user.save();
 
-    const resetURL = `${req.protocol}://${req.get(
-      "host"
-    )}/api/auth/resetPassword/${forgetPasswordToken}`;
+    //  create  reset url
+    const resetURL = `${process.env.CLIENT_URL}/reset_password/${forgotPasswordToken}`;
 
+    // create mail content
     const mailOptions = {
       from: process.env.EMAIL_ID,
       to: user.email,
       subject: "Event managment Reset password",
       html: `<b>Hello ${user.firstName}  ${user.lastName}</b><br>
-         <a href="${resetURL}" target ="_blank" >Click here to reset password</a>`,
+         <a href="${resetURL}" target ="_blank" >Click here to reset password</a>`
     };
 
+    // send email
     transporter.sendMail(mailOptions, async (error, info) => {
       if (error) {
-        user.forgetPasswordToken = undefined;
-        user.forgetPasswordExpiry = undefined;
+        user.forgotPasswordToken = undefined;
+        user.forgotPasswordExpiry = undefined;
         await user.save();
         return next(error);
       }
@@ -192,15 +210,15 @@ const forgotPassword = async (req, res, next) => {
 };
 
 /******************************************************
- * @FORGETPASSWORD
+ * @resetPassword
  * @route http://localhost:8081/api/auth/forgotPassword
  * @description send cookie to user
- * @parameters
+ * @body forgotPasswordToken, password, confirmPassword
  * @returns success message + cookie
  ******************************************************/
 
 const resetPassword = async (req, res, next) => {
-  const { forgetPasswordToken } = req.params;
+  const { forgotPasswordToken } = req.params;
   const { password, confirmPassword } = req.body;
   try {
     if (!password || !confirmPassword) {
@@ -208,31 +226,37 @@ const resetPassword = async (req, res, next) => {
         new CustomError("password and conform Password is Required", 400)
       );
     }
+
     if (password !== confirmPassword) {
       return next(
-        new CustomError("password and conf password does not match", 400)
+        new CustomError("password and confirm password does not match", 400)
       );
     }
 
+    // check user is exist
     const user = await userModel.findOne({
-      forgetPasswordToken,
-      forgetPasswordExpiry: { $gt: new Date(Date.now()) },
+      forgotPasswordToken,
+      forgotPasswordExpiry: { $gt: new Date(Date.now()) }
     });
     if (!user) {
-      return next(new CustomError("password token is invalid or expired", 400));
+      return next(
+        new CustomError("forgot password token is invalid or expired", 400)
+      );
     }
 
+    // create hash password and and store in database
     const hashPass = await bcrypt.hash(password, 10);
     user.password = hashPass;
-    user.forgetPasswordToken = undefined;
-    user.forgetPasswordExpiry = undefined;
-    user.save();
+    user.forgotPasswordToken = undefined;
+    user.forgotPasswordExpiry = undefined;
+    await user.save();
+    // create jwt token and send  to client,
     const token = user.generateJwtToken();
-
-    res
-      .status(200)
-      .cookie("Token", token, cookieOptions)
-      .json({ success: true, message: "successfuly updated the password" });
+    res.status(200).cookie("Token", token, cookieOptions).json({
+      success: true,
+      message: "successfuly updated the password",
+      Token: token
+    });
   } catch (error) {
     return next(error);
   }
@@ -248,7 +272,6 @@ const resetPassword = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
   const userId = req.user._id;
-  console.log(req.user);
   try {
     const user = await userModel.findById(userId);
     res.status(200).json({ success: true, data: user });
@@ -264,5 +287,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   verifyOtp,
-  getUser,
+  getUser
 };

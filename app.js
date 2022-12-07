@@ -6,10 +6,17 @@ const authRouter = require("./router/authRout.js");
 const eventRouter = require("./router/eventRouter.js");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://localhost:8081"],
+    credentials: true
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use(
   fileUpload({

@@ -1,14 +1,15 @@
 import React from "react";
-
+import { useContext } from "react";
+import { GlobalContex } from "../context/Context.js";
 function Navbar() {
-  const userData = true;
+  const { userData } = useContext(GlobalContex);
 
   return (
     <nav className="p-3  h-16 w-full fixed top-0 left-0  bg-[#283895] ">
       <div
         className="container flex  items-center   mx-auto"
         style={
-          userData
+          Object.keys(userData).length > 1
             ? { justifyContent: "space-between" }
             : { justifyContent: "center" }
         }
@@ -18,7 +19,7 @@ function Navbar() {
             SOLGURUZ
           </span>
         </div>
-        {userData ? (
+        {Object.keys(userData).length > 1 ? (
           <div className=" bg-[#909ce1] rounded-full h-10 w-10 flex justify-center items-center">
             <svg
               className="w-6 h-6"
