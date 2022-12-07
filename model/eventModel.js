@@ -15,6 +15,7 @@ const eventSchema = new Schema(
       maxLength: [250, "Maximum lenght is 250"]
     },
     email: { type: String, required: [true, "Email is Required"] },
+    phone: { type: Number, required: [true, "Phone number is Required"] },
     address: { type: String, required: [true, "Address is Required"] },
     city: { type: String, required: [true, "City is Required"] },
     organizerName: {

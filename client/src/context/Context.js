@@ -4,7 +4,8 @@ export const GlobalContex = createContext();
 
 const Contex = ({ children }) => {
   const [userData, setUserData] = useState({});
-
+  const [eventData, setEventData] = useState([]);
+  const [cities, setCities] = useState([]);
   const notify = (message, type) => {
     return toast[type](message, {
       position: "bottom-left",
@@ -19,7 +20,17 @@ const Contex = ({ children }) => {
   };
 
   return (
-    <GlobalContex.Provider value={{ notify, userData, setUserData }}>
+    <GlobalContex.Provider
+      value={{
+        cities,
+        setCities,
+        notify,
+        userData,
+        setUserData,
+        eventData,
+        setEventData
+      }}
+    >
       {children}
     </GlobalContex.Provider>
   );

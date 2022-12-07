@@ -5,7 +5,7 @@ import FogetPassword from "./components/Auth/FogetPassword";
 import ResetPassword from "./components/Auth/ResetPassword";
 import OtpVerification from "./components/Auth/OtpVerification";
 import SingInSignUp from "./components/Auth/SignIn_SignUp/Index.js";
-import Events from "./components/pages/Events.js";
+import Events from "./components/pages/Events/index.js";
 import Dashbord from "./components/pages/Dashbord";
 //
 

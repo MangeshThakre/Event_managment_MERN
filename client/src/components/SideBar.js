@@ -41,7 +41,7 @@ function SideBar() {
           <path
             fillRule="evenodd"
             d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z"
-            clip-rule="evenodd"
+            clipRule="evenodd"
           ></path>
           <path
             fillRule="evenodd"

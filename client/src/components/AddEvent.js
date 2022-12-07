@@ -1,6 +1,23 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 function AddEvent({ setToggleAddEvent }) {
+  const [newEventData, setNewEventData] = useState({
+    title: "",
+    discription: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    organizerName: "",
+    status: false,
+    imageOne: "",
+    imageTwo: "",
+    imageThree: "",
+    imageFour: "",
+    publishDate: ""
+  });
+
   function handleSubmit() {}
   return (
     <div className="absolute  w-[100%] h-[100vh]  left-0 top-0  flex  justify-end  bg-[#17171994] z-40">
@@ -45,6 +62,9 @@ function AddEvent({ setToggleAddEvent }) {
               className="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  placeholder-gray-400 "
               placeholder="Enter Title"
               required
+              onClick={(e) =>
+                setNewEventData({ ...newEventData, title: e.target.value })
+              }
             />
           </div>
           {/* title end */}
@@ -62,6 +82,12 @@ function AddEvent({ setToggleAddEvent }) {
               className="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  placeholder-gray-400 "
               placeholder="Enter Description"
               required
+              onClick={(e) =>
+                setNewEventData({
+                  ...newEventData,
+                  discription: e.target.value
+                })
+              }
             />
           </div>
           {/* description end */}
@@ -74,11 +100,17 @@ function AddEvent({ setToggleAddEvent }) {
               E-Mail
             </label>
             <input
-              type="text"
+              type="email"
               id="email"
               className="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  placeholder-gray-400 "
               placeholder="Enter Email Id"
               required
+              onClick={(e) =>
+                setNewEventData({
+                  ...newEventData,
+                  email: e.target.value
+                })
+              }
             />
           </div>
           {/* email end */}
@@ -98,6 +130,12 @@ function AddEvent({ setToggleAddEvent }) {
               required
               maxLength="10"
               minLength="10"
+              onClick={(e) =>
+                setNewEventData({
+                  ...newEventData,
+                  phone: e.target.value
+                })
+              }
             />
           </div>
           {/* phone */}
@@ -116,8 +154,14 @@ function AddEvent({ setToggleAddEvent }) {
               placeholder="Enter Adderss"
               required
               autoComplete="off"
+              onClick={(e) =>
+                setNewEventData({
+                  ...newEventData,
+                  address: e.target.value
+                })
+              }
             />
-          </div>{" "}
+          </div>
           {/* Adderss end */}
           {/* city */}
           <div className="flex  items-center  gap-2">
@@ -152,6 +196,12 @@ function AddEvent({ setToggleAddEvent }) {
               placeholder="Enter Organizer Name"
               required
               autoComplete="off"
+              onClick={(e) =>
+                setNewEventData({
+                  ...newEventData,
+                  organizerName: e.target.value
+                })
+              }
             />
           </div>
           {/*  Organizer Name  end*/}
@@ -169,12 +219,35 @@ function AddEvent({ setToggleAddEvent }) {
                 type="checkbox"
                 value=""
                 class="sr-only peer"
+                onChange={(e) =>
+                  setNewEventData({
+                    ...newEventData,
+                    status: !newEventData.organizerName
+                  })
+                }
               />
 
               <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300  rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all border-gray-600 peer-checked:bg-blue-600"></div>
             </label>
           </div>
           {/*  end status */}
+          {/* image */}
+          <div className="flex  items-center  gap-2">
+            <label
+              htmlFor="image"
+              className="block md:w-28 text-start mb-1 text-sm font-medium text-gray-800"
+            >
+              Organizer Name
+            </label>
+            <input
+              type="file"
+              id="image"
+              className="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  placeholder-gray-400 "
+              placeholder="select image (single & multiple)"
+              required
+            />
+          </div>
+          {/* images  end*/}
           {/* date and time */}
           <div className="flex  items-center  gap-2">
             <label
@@ -190,6 +263,12 @@ function AddEvent({ setToggleAddEvent }) {
               placeholder="Select Date and Time"
               required
               autoComplete="off"
+              onClick={(e) =>
+                setNewEventData({
+                  ...newEventData,
+                  date: e.target.value
+                })
+              }
             />
           </div>
           {/* date and time end */}

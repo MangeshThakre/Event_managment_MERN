@@ -101,13 +101,18 @@ const getEvent = async (req, res, next) => {
 
 const getEvents = async (req, res, next) => {
   const { search, from, to, page, limit, city } = req.query;
+
   const filterQuery = {};
+
   if (search) filterQuery["$text"] = { $search: search };
-  if (from && to) filterQuery["createdAt"] = { $gt: from, $lt: to };
+  if (from && to)
+    filterQuery["createdAt"] = { $gt: new Date(from), $lt: new Date(to) };
   if (city) filterQuery["city"] = city;
+
   try {
     const events = await eventModel.find(filterQuery);
-    res.status(200).json({ success: false, data: events });
+    const cityArr = await eventModel.distinct("city");
+    res.status(200).json({ success: true, data: events, cityArr });
   } catch (error) {
     return next(error);
   }
