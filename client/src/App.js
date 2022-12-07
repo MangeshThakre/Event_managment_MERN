@@ -6,8 +6,8 @@ import FogetPassword from "./components/Auth/FogetPassword";
 import ResetPassword from "./components/Auth/ResetPassword";
 import OtpVerification from "./components/Auth/OtpVerification";
 import SingInSignUp from "./components/Auth/SignIn_SignUp/Index.js";
-import Dashbord from "./components/pages/Dashbord.js";
 import Events from "./components/pages/Events.js";
+import AddEvent from "./components/AddEvent";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {

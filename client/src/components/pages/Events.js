@@ -6,7 +6,7 @@ import Filter from "../Filter.js";
 
 function Events() {
   return (
-    <div className="px-4 pt-20 pb-4  h-full">
+    <div className="px-4 pt-20 pb-4  h-full flex flex-col">
       <Filter />
       <EventLists />
     </div>

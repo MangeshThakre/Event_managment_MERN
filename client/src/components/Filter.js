@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
+
+// components
+import AddEvent from "./AddEvent";
 
 function Filter() {
+  const [toggleAddEvent, setToggleAddEvent] = useState(false);
+
   return (
     <div className=" bg-white rounded-lg shadow   h-fit">
       <form className="px-2 py-2 lg:px-6 lg:py:6 flex gap-3">
@@ -105,26 +110,32 @@ function Filter() {
         </button>
 
         {/* create */}
-        <button
-          type="button"
-          className="py-2 px-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex "
-        >
-          <svg
-            className="w-6 h-6 mr-1"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
+        <div className=" flex-1 justify-end flex ">
+          <button
+            onClick={() => setToggleAddEvent(true)}
+            type="button"
+            className="py-2 px-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex "
           >
-            <path
-              fillRule="evenodd"
-              d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-              clipRule="evenodd"
-            ></path>
-          </svg>
-          Create
-        </button>
+            <svg
+              className="w-6 h-6 mr-1"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                clipRule="evenodd"
+              ></path>
+            </svg>
+            Create
+          </button>
+        </div>
         {/* create  end*/}
       </form>
+      {toggleAddEvent ? (
+        <AddEvent setToggleAddEvent={setToggleAddEvent} />
+      ) : null}
     </div>
   );
 }
