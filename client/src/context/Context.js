@@ -6,6 +6,9 @@ const Contex = ({ children }) => {
   const [userData, setUserData] = useState({});
   const [eventData, setEventData] = useState([]);
   const [cities, setCities] = useState([]);
+  const [toggleAddEvent, setToggleAddEvent] = useState(false);
+  const [currentEvent, setCurrentEvent] = useState({});
+
   const notify = (message, type) => {
     return toast[type](message, {
       position: "bottom-left",
@@ -22,13 +25,17 @@ const Contex = ({ children }) => {
   return (
     <GlobalContex.Provider
       value={{
+        notify,
         cities,
         setCities,
-        notify,
         userData,
         setUserData,
         eventData,
-        setEventData
+        setEventData,
+        currentEvent,
+        setCurrentEvent,
+        toggleAddEvent,
+        setToggleAddEvent
       }}
     >
       {children}

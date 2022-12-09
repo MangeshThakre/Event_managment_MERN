@@ -3,7 +3,7 @@ const CustomError = require("./errorHandler.js");
 
 const jwtAuth = (req, res, next) => {
   const token =
-    req.cookies.Token ||
+    (req.cookies && req.cookies.Token) ||
     (req.headers.authorization && req.headers["authorization"].split(" ")[1]);
   if (!token) {
     return next(new CustomError("NOt authorized to access this route", 401));

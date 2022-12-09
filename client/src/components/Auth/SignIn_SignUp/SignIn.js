@@ -22,7 +22,7 @@ function SignIn() {
       });
       if (response.data.success) {
         notify(response.data.message, "success");
-        // navigate("/otp_verification");
+        navigate("/otp_verification/" + signData.email);
       }
       setSignInLoading(false);
     } catch (error) {

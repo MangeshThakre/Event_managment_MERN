@@ -13,11 +13,17 @@ import loadingSvg from "./asset/loading.svg";
 import { GlobalContex } from "./context/Context";
 import { ToastContainer } from "react-toastify";
 import { useEffect, useContext, useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate
+} from "react-router-dom";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
+  const navigate = useNavigate();
   const URL = process.env.REACT_APP_URL;
   const [dataLoading, setDataLoading] = useState(false);
   const { setUserData, notify } = useContext(GlobalContex);
@@ -35,10 +41,12 @@ function App() {
       });
       if (response.data.success) {
         setUserData(response.data.data);
+        navigate("/events");
       }
       setDataLoading(false);
     } catch (error) {
       setDataLoading(false);
+      navigate("/signin");
       notify(error.response.data.message, "error");
     }
   }
@@ -62,7 +70,7 @@ function App() {
           path="/reset_password/:fotgotPasswordToken"
           element={<ResetPassword />}
         />
-        <Route path="/otp_verification" element={<OtpVerification />} />
+        <Route path="/otp_verification/:email" element={<OtpVerification />} />
         <Route path="/events" element={<Events />} />
         <Route path="/dashbord" element={<Dashbord />} />
       </Routes>

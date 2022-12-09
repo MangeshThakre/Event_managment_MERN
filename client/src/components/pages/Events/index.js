@@ -36,7 +36,6 @@ function Events() {
         setEventData(response.data.data);
         setCities(response.data.cityArr);
       }
-
       setEventLoading(false);
     } catch (error) {
       setEventLoading(false);

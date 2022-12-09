@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-
+import React, { useState, useContext } from "react";
+import { GlobalContex } from "../../../context/Context";
 // components
 import AddEvent from "../../AddEvent";
 
 function Filter({ filter, setFilter, cities }) {
-  const [toggleAddEvent, setToggleAddEvent] = useState(false);
+  const { toggleAddEvent, setToggleAddEvent } = useContext(GlobalContex);
   const [showCityDropDown, setShowCityDropDown] = useState(false);
+
   const [filterData, setFilterData] = useState({
     search: "",
     to: "",
@@ -18,7 +19,7 @@ function Filter({ filter, setFilter, cities }) {
     setFilter({
       ...filter,
       search: filterData.search,
-      city: filterData.city,
+      city: filterData.city === "--" ? "" : filterData.city,
       from: filterData.from,
       to: filterData.to
     });

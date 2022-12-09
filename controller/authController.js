@@ -65,7 +65,6 @@ const login = async (req, res, next) => {
     if (!isPasswordCorrect) {
       return next(new CustomError("Invalid credentials", 400));
     }
-    console.log(isPasswordCorrect);
 
     const expiryDate = new Date(Date.now() + 2 * 60 * 1000); // 2min
     const OTP = Math.floor(Math.random() * 9999).toString();
@@ -115,6 +114,10 @@ const verifyOtp = async (req, res, next) => {
   const { otp, email } = req.body;
 
   try {
+    if (!otp || !email) {
+      return next(new CustomError("OTP and email is required", 400));
+    }
+
     const user = await userModel.findOne({ email });
     if (!user) return new CustomError("User not Found", 400);
 

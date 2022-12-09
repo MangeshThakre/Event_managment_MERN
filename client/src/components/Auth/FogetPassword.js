@@ -1,11 +1,9 @@
 import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { GlobalContex } from "../../context/Context.js";
 import axios from "axios";
 
 function FogetPassword() {
-  const navigate = useNavigate();
   const URL = process.env.REACT_APP_URL;
   const { notify } = useContext(GlobalContex);
   const [FotgetPassEmail, setFotgetPassEmail] = useState({});

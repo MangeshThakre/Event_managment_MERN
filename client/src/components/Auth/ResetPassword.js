@@ -32,7 +32,7 @@ function ResetPassword() {
       if (response.data.success) {
         setresetPasswordLoading(false);
         notify(response.data.message, "success");
-        navigate("/dashbord");
+        navigate("/events");
       }
     } catch (error) {
       notify(error.response.data.message, "error");

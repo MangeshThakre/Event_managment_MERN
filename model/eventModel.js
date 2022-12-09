@@ -22,15 +22,24 @@ const eventSchema = new Schema(
       type: String,
       required: [true, "OrginazerName is Require"]
     },
-    images: [
-      new Schema(
-        {
-          url: { type: String, required: true },
-          imageId: { type: String, required: true }
-        },
-        { _id: false }
-      )
-    ],
+    images: {
+      imageOne: {
+        url: { type: String },
+        imageId: { type: String }
+      },
+      imageTwo: {
+        url: { type: String },
+        imageId: { type: String }
+      },
+      imageThree: {
+        url: { type: String },
+        imageId: { type: String }
+      },
+      imageFour: {
+        url: { type: String },
+        imageId: { type: String }
+      }
+    },
     status: {
       type: Boolean,
       required: [true, "Status is Require"],

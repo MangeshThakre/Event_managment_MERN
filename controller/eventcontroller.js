@@ -1,3 +1,4 @@
+const { findByIdAndUpdate } = require("../model/eventModel.js");
 const eventModel = require("../model/eventModel.js");
 const userModel = require("../model/userModel.js");
 const CustomError = require("../utils/custonErrorHandler.js");
@@ -17,6 +18,7 @@ const addEvent = async (req, res, next) => {
     email,
     city,
     address,
+    phone,
     organizerName,
     status,
     publishDate
@@ -29,6 +31,7 @@ const addEvent = async (req, res, next) => {
     images,
     description,
     email,
+    phone,
     city,
     address,
     organizerName,
@@ -41,6 +44,7 @@ const addEvent = async (req, res, next) => {
   try {
     const newEvent = await eventInfo.save();
     res.status(200).json({ success: true, data: newEvent, link: eventUrl });
+    // res.status(200).json({ success: true });
   } catch (error) {
     return next(error);
   }
@@ -55,21 +59,19 @@ const addEvent = async (req, res, next) => {
 //  ******************************************************/
 
 const editEvent = async (req, res, next) => {
-  //   const {
-  //     _id,
-  //     userId,
-  //     description,
-  //     email,
-  //     images,
-  //     address,
-  //     organizerName,
-  //     status,
-  //     publishDate
-  //   } = req.body;
-  //   try {
-  //   } catch (error) {
-  //     return next(error);
-  //   }
+  req.body["images"] = req.user.images;
+  req.body["status"] = req.body.status == "false" ? false : true;
+  req.body["publishDate"] = new Date(req.body.publishDate);
+  try {
+    const result = await eventModel.findByIdAndUpdate(
+      req.body.eventId,
+      req.body,
+      { new: true }
+    );
+    res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    return next(error);
+  }
 };
 
 /******************************************************
@@ -118,4 +120,26 @@ const getEvents = async (req, res, next) => {
   }
 };
 
-module.exports = { addEvent, editEvent, getEvent, getEvents };
+/******************************************************
+ * @deleteEvent
+ * @route http://localhost:8081/api/event
+ * @description  delete the event by event id
+ * @body eventId
+ * @returns success message
+ ******************************************************/
+
+const deleteEvent = async (req, res, next) => {
+  const { eventId } = req.body;
+  if (!eventId) return next(new CustomError("Event Id is required", 400));
+  try {
+    const result = await eventModel.findByIdAndDelete(eventId);
+    if (!result) return next(new CustomError("Invalid id", 400));
+    return res
+      .status(200)
+      .json({ success: true, message: "successfuly deleted the Event" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { addEvent, editEvent, getEvent, getEvents, deleteEvent };
