@@ -5,7 +5,8 @@ const {
   getEvent,
   getEvents,
   editEvent,
-  deleteEvent
+  deleteEvent,
+  getDistinctCities
 } = require("../controller/eventController.js");
 const cloudinaryImageUpload = require("../middlewares/cloudinaryImageUpload");
 const jwtAuth = require("../middlewares/jwtAuth.js");
@@ -18,5 +19,6 @@ eventRouter
   .delete(jwtAuth, deleteEvent);
 
 eventRouter.get("/events", jwtAuth, getEvents);
+eventRouter.get("/distinctCities", jwtAuth, getDistinctCities);
 
 module.exports = eventRouter;

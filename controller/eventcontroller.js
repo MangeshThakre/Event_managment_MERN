@@ -1,3 +1,4 @@
+const { response } = require("express");
 const { findByIdAndUpdate } = require("../model/eventModel.js");
 const eventModel = require("../model/eventModel.js");
 const userModel = require("../model/userModel.js");
@@ -103,18 +104,47 @@ const getEvent = async (req, res, next) => {
 
 const getEvents = async (req, res, next) => {
   const { search, from, to, page, limit, city } = req.query;
+  if (from || to) {
+    if (new Date(from) === "Invalid Date" || new Date(to) === "Invalid Date") {
+      return next(CustomError("Invalid Date", 400));
+    }
+  }
+
+  const PAGE = Number(page) || 1;
+  const LIMIT = Number(limit) || 10;
+  const startIndex = (PAGE - 1) * LIMIT;
+  const endIndex = PAGE * LIMIT;
 
   const filterQuery = {};
-
-  if (search) filterQuery["$text"] = { $search: search };
-  if (from && to)
-    filterQuery["createdAt"] = { $gt: new Date(from), $lt: new Date(to) };
+  if (search) filterQuery["title"] = { $regex: search, $options: "i" };
   if (city) filterQuery["city"] = city;
+  if (from && to)
+    filterQuery["createdAt"] = {
+      $gt: new Date(from).toISOString(),
+      $lt: new Date(to).toISOString()
+    };
 
   try {
-    const events = await eventModel.find(filterQuery);
-    const cityArr = await eventModel.distinct("city");
-    res.status(200).json({ success: true, data: events, cityArr });
+    const totalEvents = await eventModel.find().countDocuments();
+    const result = {};
+    if (endIndex < totalEvents) {
+      result.next = {
+        pageNumber: PAGE + 1,
+        limit: LIMIT
+      };
+    }
+    if (startIndex > 0) {
+      result.previous = {
+        pageNumber: PAGE - 1,
+        limit: LIMIT
+      };
+    }
+
+    result.data = await eventModel
+      .find(filterQuery)
+      .skip(startIndex)
+      .limit(limit);
+    res.status(200).json({ success: true, data: result });
   } catch (error) {
     return next(error);
   }
@@ -142,4 +172,27 @@ const deleteEvent = async (req, res, next) => {
   }
 };
 
-module.exports = { addEvent, editEvent, getEvent, getEvents, deleteEvent };
+/******************************************************
+ * @getDistinctCities
+ * @route http://localhost:8081/api/cities
+ * @description  get all distinct cities
+ * @returns return  distinct cities arr
+ ******************************************************/
+
+const getDistinctCities = async (req, res, next) => {
+  try {
+    const distinctCities = await eventModel.distinct("city");
+    res.status(200).json({ success: true, data: distinctCities });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  addEvent,
+  editEvent,
+  getEvent,
+  getEvents,
+  deleteEvent,
+  getDistinctCities
+};
