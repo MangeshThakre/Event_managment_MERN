@@ -1,18 +1,44 @@
 import React from "react";
-import { useContext } from "react";
+import { useRef, useContext, useState, useEffect } from "react";
 import { GlobalContex } from "../../../context/Context.js";
 import axios from "axios";
+
+// image
+import loding from "../../../asset/loading.svg";
+
 function Event({ event, i }) {
+  const URL = process.env.REACT_APP_URL;
   const {
     userData,
     setToggleAddEvent,
     eventData,
     setEventData,
-    setCurrentEvent,
-    notify
+    notify,
+    setCurrentEvent
   } = useContext(GlobalContex);
-  const URL = process.env.REACT_APP_URL;
+
+  const [eventLoading, setEventLoading] = useState(false);
+  const [status, setStatus] = useState(event.status);
+  const checkbox = useRef(null);
+  useEffect(() => {
+    checkbox.current.checked = event.status;
+    setStatus(event.status);
+  }, [event]);
+
+  function eventImage() {
+    if (event.images.imageOne.url) return event.images.imageOne.url;
+    if (event.images.imageTwo.url) return event.images.imageTwo.url;
+    if (event.images.imageThree.url) return event.images.imageThree.url;
+    if (event.images.imageFour.url) return event.images.imageFour.url;
+  }
+
+  useEffect(() => {
+    if (status != event.status) handleUpdate();
+  }, [status]);
+
+  //// handle delete function
   async function handleDelete() {
+    setEventLoading(true);
     try {
       const response = await axios({
         method: "delete",
@@ -24,43 +50,98 @@ function Event({ event, i }) {
         setEventData(eventData.filter((e) => e._id !== event._id));
         notify(response.data.message, "success");
       }
+      setEventLoading(false);
     } catch (error) {
+      setEventLoading(false);
+
+      notify(error.response.data.message, "error");
+    }
+  }
+
+  async function handleUpdate() {
+    const formData = new FormData();
+    for (const key in event) {
+      if (key == "images") {
+        formData.append("images", JSON.stringify(event.images));
+      } else if (key == "status") {
+        formData.append("status", status);
+      } else if (key !== "_id") {
+        formData.append(key, event[key]);
+      }
+    }
+    formData.append("eventId", event._id);
+    setEventLoading(true);
+    try {
+      const response = await axios({
+        method: "patch",
+        url: URL + "/api/event",
+        withCredentials: true,
+        data: formData
+      });
+      const data = await response.data.data;
+      if (response.data.success) {
+        setEventData(
+          eventData.map((event) => (event._id === data._id ? data : event))
+        );
+        notify("updated successfuly", "success");
+      }
+      setEventLoading(false);
+    } catch (error) {
+      console.log(error.response);
+      setEventLoading(false);
       notify(error.response.data.message, "error");
     }
   }
 
   return (
-    <tr className="bg-white border-b  h-48  border-gray-300   ">
+    <tr className="relative bg-white border-b  h-48  border-gray-300   ">
+      {eventLoading ? (
+        <td className=" absolute w-full h-full flex items-center justify-center  z-20 bg-[#0000002b] ">
+          <img src={loding} alt="" />
+        </td>
+      ) : null}
+      {/* index no */}
       <th
         scope="row"
         className="py-4 px-2 font-medium text-sm text-center text-gray-900 whitespace-nowrap "
       >
         {i}
       </th>
+      {/* index no end */}
+      {/* image */}
       <td className="py-4 px-2 text-sm text-center">
-        <img className="h-28 w-28" src={event.images.imageOne.url} alt="" />
+        <img className="h-28 w-28" src={eventImage()} alt="" />
       </td>
+      {/* image  end*/}
+      {/* title */}
       <td className="py-4 px-2 text-sm ">{event.title}</td>
+      {/* title end */}
+      {/*description  */}
       <td className="py-4 px-2">{event.description}</td>
+      {/*description  end */}
+      {/* pheone no */}
       <td className="py-4 px-2 text-sm text-center">{event.phone}</td>
+      {/* pheone no  end*/}
+      {/* like */}
       <td className="py-4 px-2 text-sm text-center ">20</td>
-
+      {/* like  end*/}
+      {/* status */}
       <td className="py-4 px-2 text-sm text-center">
         <label className="inline-flex relative items-center  cursor-pointer">
           <input
+            ref={checkbox}
             type="checkbox"
-            value=""
             className="sr-only peer"
-            defaultChecked={event.status}
             disabled={event.userId != userData._id}
+            onChange={() => setStatus(!status)}
           />
 
           <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300  rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all border-gray-600 peer-checked:bg-blue-600"></div>
         </label>
       </td>
-
+      {/* status  status end*/}
       {/* actions */}
-      <td className="py-4 px-2 text-sm    ">
+      <td className="py-4 px-2 text-sm">
         {Object.keys(userData).length > 1 && event.userId === userData._id ? (
           <div className="flex gap-2">
             {/* edit */}

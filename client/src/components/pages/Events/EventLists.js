@@ -36,8 +36,8 @@ function EventLists({ eventLoading, eventData, filter, setFilter }) {
         </thead>
         <tbody>
           {eventLoading ? (
-            <tr>
-              <th>
+            <tr className="relative h-48 w-full">
+              <th className="absolute  flex  items-center justify-center w-full">
                 <img src={loading} alt="loding" />
               </th>
             </tr>

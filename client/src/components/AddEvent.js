@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { GlobalContex } from "../context/Context.js";
-import AddImage from "./pages/AddImage.js";
+import AddImage from "./AddImage.js";
 
 function AddEvent({ setToggleAddEvent }) {
   const { notify, eventData, setEventData, currentEvent, setCurrentEvent } =
@@ -27,6 +27,7 @@ function AddEvent({ setToggleAddEvent }) {
 
   useEffect(() => {
     if (IsEdit) {
+      setStatus(currentEvent.status);
       if (currentEvent.images.imageOne.url)
         setimageOnePreview(currentEvent.images.imageOne.url);
       if (currentEvent.images.imageTwo.url)
@@ -72,6 +73,7 @@ function AddEvent({ setToggleAddEvent }) {
             eventData.map((event) => (event._id === data._id ? data : event))
           );
           notify("updated successfuly", "success");
+          setToggleAddEvent(false);
         }
       } else {
         const response = await axios({
@@ -92,6 +94,7 @@ function AddEvent({ setToggleAddEvent }) {
       notify(error.response.data.message, "error");
     }
   }
+
   return (
     <div className="absolute  w-[100%] h-[100vh]  left-0 top-0  flex  justify-end  bg-[#17171994] z-40">
       {/* component */}
@@ -101,7 +104,10 @@ function AddEvent({ setToggleAddEvent }) {
           <p className="text-gray-700  font-semibold">Create Event</p>
           <div
             className=" w-9 h-9 justify-center flex   items-center  rounded-full hover:bg-slate-100 cursor-pointer"
-            onClick={() => setToggleAddEvent(false)}
+            onClick={() => {
+              setToggleAddEvent(false);
+              setCurrentEvent({});
+            }}
           >
             <svg
               className="w-6 h-6"
