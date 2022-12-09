@@ -42,13 +42,13 @@ function EventLists({ eventLoading, eventData, filter, setFilter }) {
               </th>
             </tr>
           ) : (
-            eventData.map((event, i) => (
+            eventData.data.map((event, i) => (
               <Event key={event._id} event={event} i={i + 1} />
             ))
           )}
         </tbody>
       </table>
-      {!eventLoading && eventData.length < 1 ? null : (
+      {!eventLoading && eventData.data.length < 1 ? null : (
         <div className="   border-t-2 border-gray-100 bg-white border-b py-4 px-6  sticky bottom-0   flex  justify-between items-center w-full">
           <div
             scope="row"
@@ -57,37 +57,47 @@ function EventLists({ eventLoading, eventData, filter, setFilter }) {
             Results
           </div>
           <div className="flex  items-center gap-9 ">
-            <div className="h-9 w-9 rounded-full  flex items-center justify-center hover:bg-gray-100 cursor-pointer">
-              <svg
-                className="w-6 h-6"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
+            {Object.keys(eventData).includes("previous") ? (
+              <div
+                className="h-9 w-9 rounded-full  flex items-center justify-center hover:bg-gray-100 cursor-pointer"
+                onClick={() => setFilter({ ...filter, page: filter.page - 1 })}
               >
-                <path
-                  fillRule="evenodd"
-                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-            </div>
+                <svg
+                  className="w-6 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+            ) : null}
             <div className="h-8 w-8 rounded-md  text-white fron-bold    bg-[#283895] flex  items-center justify-center">
-              1
+              {filter.page}
             </div>
-            <div className="h-9 w-9 rounded-full  flex items-center justify-center hover:bg-gray-100 cursor-pointer">
-              <svg
-                className="w-6 h-6"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
+            {Object.keys(eventData).includes("next") ? (
+              <div
+                className="h-9 w-9 rounded-full  flex items-center justify-center hover:bg-gray-100 cursor-pointer"
+                onClick={() => setFilter({ ...filter, page: filter.page + 1 })}
               >
-                <path
-                  fillRule="evenodd"
-                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-            </div>
+                <svg
+                  className="w-6 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+            ) : null}
           </div>
         </div>
       )}

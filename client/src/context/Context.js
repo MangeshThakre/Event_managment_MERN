@@ -4,10 +4,22 @@ export const GlobalContex = createContext();
 
 const Contex = ({ children }) => {
   const [userData, setUserData] = useState({});
-  const [eventData, setEventData] = useState([]);
+  const [eventData, setEventData] = useState({
+    previous: {
+      pageNumber: "",
+      limit: ""
+    },
+    next: {
+      pageNumber: "",
+      limit: ""
+    },
+    data: []
+  });
   const [cities, setCities] = useState([]);
   const [toggleAddEvent, setToggleAddEvent] = useState(false);
+  const [toggleDisplayEvent, setToggleDisplayEvent] = useState(false);
   const [currentEvent, setCurrentEvent] = useState({});
+  const [popup, setPopup] = useState({ show: false, eventId: "", type: "" });
 
   const notify = (message, type) => {
     return toast[type](message, {
@@ -26,6 +38,8 @@ const Contex = ({ children }) => {
     <GlobalContex.Provider
       value={{
         notify,
+        popup,
+        setPopup,
         cities,
         setCities,
         userData,
@@ -35,7 +49,9 @@ const Contex = ({ children }) => {
         currentEvent,
         setCurrentEvent,
         toggleAddEvent,
-        setToggleAddEvent
+        setToggleAddEvent,
+        toggleDisplayEvent,
+        setToggleDisplayEvent
       }}
     >
       {children}

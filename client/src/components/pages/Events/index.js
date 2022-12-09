@@ -9,16 +9,16 @@ import { useContext, useState, useEffect } from "react";
 import { GlobalContex } from "../../../context/Context.js";
 function Events() {
   const URL = process.env.REACT_APP_URL;
-  const { notify, userData, eventData, setEventData, cities, setCities } =
+  const { notify, userData, eventData, setEventData } =
     useContext(GlobalContex);
   const [eventLoading, setEventLoading] = useState(false);
   const [filter, setFilter] = useState({
     search: "",
     city: "",
-    from: "",
-    to: "",
+    from: new Date(Date.now() - 24 * 60 * 60 * 1000),
+    to: new Date(Date.now()),
     page: 1,
-    limit: 10
+    limit: 3
   });
   useEffect(() => {
     getEvents();
@@ -29,12 +29,12 @@ function Events() {
     try {
       const response = await axios({
         method: "get",
-        url: `${URL}/api/events?search=${filter.search}&city=${filter.city}&from=${filter.form}&to=${filter.to}&page=${filter.page}&limit=${filter.limit}`,
+        url: `${URL}/api/events?search=${filter.search}&city=${filter.city}&from=${filter.from}&to=${filter.to}&page=${filter.page}&limit=${filter.limit}`,
         withCredentials: "true"
       });
       if (response.data.success) {
         setEventData(response.data.data);
-        setCities(response.data.cityArr);
+        // console.log(response.data);
       }
       setEventLoading(false);
     } catch (error) {
@@ -47,7 +47,7 @@ function Events() {
     <div className="pr-4 pt-16 pb-4  h-full flex gap-8  ">
       <SideBar />
       <div className=" h-full pt-4 flex flex-col w-full">
-        <Filter filter={filter} setFilter={setFilter} cities={cities} />
+        <Filter filter={filter} setFilter={setFilter} />
         <EventLists
           eventLoading={eventLoading}
           eventData={eventData}

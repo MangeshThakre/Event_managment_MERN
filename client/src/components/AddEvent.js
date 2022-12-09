@@ -3,9 +3,15 @@ import axios from "axios";
 import { GlobalContex } from "../context/Context.js";
 import AddImage from "./AddImage.js";
 
-function AddEvent({ setToggleAddEvent }) {
-  const { notify, eventData, setEventData, currentEvent, setCurrentEvent } =
-    useContext(GlobalContex);
+function AddEvent() {
+  const {
+    notify,
+    eventData,
+    setEventData,
+    setToggleAddEvent,
+    currentEvent,
+    setCurrentEvent
+  } = useContext(GlobalContex);
   const IsEdit = Object.keys(currentEvent).length > 1 ? true : false;
   const URL = process.env.REACT_APP_URL;
 
@@ -69,11 +75,13 @@ function AddEvent({ setToggleAddEvent }) {
         });
         const data = await response.data.data;
         if (response.data.success) {
-          setEventData(
-            eventData.map((event) => (event._id === data._id ? data : event))
-          );
+          setEventData({
+            ...eventData,
+            data: eventData.data.map((event) =>
+              event._id === data._id ? data : event
+            )
+          });
           notify("updated successfuly", "success");
-          setToggleAddEvent(false);
         }
       } else {
         const response = await axios({
@@ -83,11 +91,15 @@ function AddEvent({ setToggleAddEvent }) {
           data: formData
         });
         if (response.data.success) {
-          setEventData([...eventData, response.data.data]);
+          setEventData({
+            ...eventData,
+            data: [...eventData.data, response.data.data.data]
+          });
           notify("New Event created successfuly", "success");
         }
       }
 
+      setToggleAddEvent(false);
       setNewEventLoading(false);
     } catch (error) {
       setNewEventLoading(false);

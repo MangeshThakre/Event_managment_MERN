@@ -14,7 +14,9 @@ function Event({ event, i }) {
     eventData,
     setEventData,
     notify,
-    setCurrentEvent
+    setPopup,
+    setCurrentEvent,
+    setToggleDisplayEvent
   } = useContext(GlobalContex);
 
   const [eventLoading, setEventLoading] = useState(false);
@@ -35,28 +37,6 @@ function Event({ event, i }) {
   useEffect(() => {
     if (status != event.status) handleUpdate();
   }, [status]);
-
-  //// handle delete function
-  async function handleDelete() {
-    setEventLoading(true);
-    try {
-      const response = await axios({
-        method: "delete",
-        url: URL + "/api/event",
-        withCredentials: true,
-        data: { eventId: event._id }
-      });
-      if (response.data.success) {
-        setEventData(eventData.filter((e) => e._id !== event._id));
-        notify(response.data.message, "success");
-      }
-      setEventLoading(false);
-    } catch (error) {
-      setEventLoading(false);
-
-      notify(error.response.data.message, "error");
-    }
-  }
 
   async function handleUpdate() {
     const formData = new FormData();
@@ -80,9 +60,12 @@ function Event({ event, i }) {
       });
       const data = await response.data.data;
       if (response.data.success) {
-        setEventData(
-          eventData.map((event) => (event._id === data._id ? data : event))
-        );
+        setEventData({
+          ...eventData,
+          dasta: eventData.data.map((event) =>
+            event._id === data._id ? data : event
+          )
+        });
         notify("updated successfuly", "success");
       }
       setEventLoading(false);
@@ -94,7 +77,7 @@ function Event({ event, i }) {
   }
 
   return (
-    <tr className="relative bg-white border-b  h-48  border-gray-300   ">
+    <tr className="relative bg-white   border-b-2 h-48  border-gray-400 ">
       {eventLoading ? (
         <td className=" absolute w-full h-full flex items-center justify-center  z-20 bg-[#0000002b] ">
           <img src={loding} alt="" />
@@ -109,7 +92,13 @@ function Event({ event, i }) {
       </th>
       {/* index no end */}
       {/* image */}
-      <td className="py-4 px-2 text-sm text-center">
+      <td
+        className="py-4 px-2 text-sm text-center cursor-pointer "
+        onClick={() => {
+          setToggleDisplayEvent(true);
+          setCurrentEvent(event);
+        }}
+      >
         <img className="h-28 w-28" src={eventImage()} alt="" />
       </td>
       {/* image  end*/}
@@ -170,7 +159,9 @@ function Event({ event, i }) {
             {/* delete  */}
             <div
               className="h-8 w-8  hover:bg-gray-200 rounded-full flex justify-center items-center cursor-pointer"
-              onClick={() => handleDelete()}
+              onClick={() =>
+                setPopup({ show: true, eventId: event._id, type: "DELETE" })
+              }
             >
               <svg
                 className="w-6 h-6"
