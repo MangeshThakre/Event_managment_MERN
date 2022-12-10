@@ -18,7 +18,7 @@ function LogoutDeletePopUp() {
         withCredentials: true
       });
       if (response.data.success) {
-        setUserData({});
+        setPopup({ eventId: "", type: "", show: false });
         window.location.reload();
       }
       setLoading(false);

@@ -22,6 +22,7 @@ function Event({ event, i }) {
   const [eventLoading, setEventLoading] = useState(false);
   const [status, setStatus] = useState(event.status);
   const checkbox = useRef(null);
+  const [likes, setLikes] = useState(event.likes);
   useEffect(() => {
     checkbox.current.checked = event.status;
     setStatus(event.status);
@@ -35,8 +36,9 @@ function Event({ event, i }) {
   }
 
   useEffect(() => {
-    if (status != event.status) handleUpdate();
-  }, [status]);
+    if (status != event.status || event.likes.length !== likes.length)
+      handleUpdate();
+  }, [status, likes]);
 
   async function handleUpdate() {
     const formData = new FormData();
@@ -45,6 +47,8 @@ function Event({ event, i }) {
         formData.append("images", JSON.stringify(event.images));
       } else if (key == "status") {
         formData.append("status", status);
+      } else if (key === "likes") {
+        formData.append("likes", JSON.stringify(likes));
       } else if (key !== "_id") {
         formData.append(key, event[key]);
       }
@@ -62,7 +66,7 @@ function Event({ event, i }) {
       if (response.data.success) {
         setEventData({
           ...eventData,
-          dasta: eventData.data.map((event) =>
+          data: eventData.data.map((event) =>
             event._id === data._id ? data : event
           )
         });
@@ -70,19 +74,16 @@ function Event({ event, i }) {
       }
       setEventLoading(false);
     } catch (error) {
-      console.log(error.response);
       setEventLoading(false);
       notify(error.response.data.message, "error");
     }
   }
 
   return (
-    <tr className="relative bg-white   border-b-2 h-48  border-gray-400 ">
-      {eventLoading ? (
-        <td className=" absolute w-full h-full flex items-center justify-center  z-20 bg-[#0000002b] ">
-          <img src={loding} alt="" />
-        </td>
-      ) : null}
+    <tr
+      className="relative    border-b-[1px] h-48  border-gray-400 "
+      style={eventLoading ? { backgroundColor: "#0000002b" } : null}
+    >
       {/* index no */}
       <th
         scope="row"
@@ -99,20 +100,55 @@ function Event({ event, i }) {
           setCurrentEvent(event);
         }}
       >
-        <img className="h-28 w-28" src={eventImage()} alt="" />
+        <img
+          className="h-28 w-28  rounded-sm shadow-lg"
+          src={eventImage()}
+          alt=""
+        />
       </td>
       {/* image  end*/}
       {/* title */}
-      <td className="py-4 px-2 text-sm ">{event.title}</td>
+      <td className="py-4 px-2 text-sm  md:max-w-md break-words">
+        {event.title}
+      </td>
       {/* title end */}
       {/*description  */}
-      <td className="py-4 px-2">{event.description}</td>
+      <td className="py-4 px-2   ">
+        <p className="md:max-w-md break-words">{event.description}</p>
+      </td>
       {/*description  end */}
       {/* pheone no */}
       <td className="py-4 px-2 text-sm text-center">{event.phone}</td>
       {/* pheone no  end*/}
       {/* like */}
-      <td className="py-4 px-2 text-sm text-center ">20</td>
+      <td className="py-4 px-2 text-sm text-center">
+        <div className="flex gap-2 items-center justify-center">
+          <div
+            className="w-8 h-8 hover:bg-orange-100  rounded-full flex items-center justify-center cursor-pointer"
+            onClick={() => {
+              event.likes.includes(userData._id)
+                ? setLikes(event.likes.filter((id) => id !== userData._id))
+                : setLikes([...event.likes, userData._id]);
+            }}
+          >
+            <svg
+              className="w-6 h-6"
+              fill={event.likes.includes(userData._id) ? "orange" : "none"}
+              stroke="orange"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              ></path>
+            </svg>
+          </div>
+          <p>{event.likes.length}</p>
+        </div>
+      </td>
       {/* like  end*/}
       {/* status */}
       <td className="py-4 px-2 text-sm text-center">
@@ -179,7 +215,13 @@ function Event({ event, i }) {
             {/* delete  end*/}
           </div>
         ) : (
-          <div className="h-8 w-8 ml-5  hover:bg-gray-200 rounded-full flex justify-center items-center cursor-pointer">
+          <div
+            className="h-8 w-8 ml-5  hover:bg-gray-200 rounded-full flex justify-center items-center cursor-pointer"
+            onClick={() => {
+              setToggleDisplayEvent(true);
+              setCurrentEvent(event);
+            }}
+          >
             <svg
               className="w-6 h-6"
               fill="gray"

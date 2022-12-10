@@ -45,6 +45,26 @@ function AddEvent() {
     }
   }, [currentEvent]);
 
+  function getImage() {
+    if (!imageOnePreview) {
+      currentEvent.images.imageOne.url = "";
+      currentEvent.images.imageOne.imageId = "";
+    }
+    if (!imageTwoPreview) {
+      currentEvent.images.imageTwo.url = "";
+      currentEvent.images.imageTwo.imageId = "";
+    }
+    if (!imageThreePreview) {
+      currentEvent.images.imageThree.url = "";
+      currentEvent.images.imageThree.imageId = "";
+    }
+    if (!imageFourPreview) {
+      currentEvent.images.imageFour.url = "";
+      currentEvent.images.imageFour.imageId = "";
+    }
+    return currentEvent.images;
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     if (
@@ -61,12 +81,12 @@ function AddEvent() {
     if (imageThree) formData.append("imageThree", imageThree);
     if (imageFour) formData.append("imageFour", imageFour);
     formData.append("status", status);
-
     setNewEventLoading(true);
     try {
       if (IsEdit) {
         formData.append("eventId", currentEvent._id);
-        formData.append("images", JSON.stringify(currentEvent.images));
+        formData.append("images", JSON.stringify(getImage()));
+        formData.append("likes", JSON.stringify(currentEvent.likes));
         const response = await axios({
           method: "patch",
           url: URL + "/api/event",

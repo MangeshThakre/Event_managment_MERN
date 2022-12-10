@@ -60,7 +60,7 @@ function OtpVerification() {
                 placeholder="Enter OTP"
                 required
                 maxLength="4"
-                minLength="4"
+                minLength="3"
                 onChange={(e) =>
                   setVerifyOtpData({ ...verifyOtpData, otp: e.target.value })
                 }

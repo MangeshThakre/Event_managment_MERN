@@ -48,7 +48,8 @@ const eventSchema = new Schema(
     publishDate: {
       type: Date,
       required: [true, "Publish Date and Time is Required"]
-    }
+    },
+    likes: { type: Array }
   },
   { timestamps: true }
 );

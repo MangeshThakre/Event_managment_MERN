@@ -10,32 +10,38 @@ import Dashbord from "./components/pages/Dashbord";
 import LogoutDeletePopUp from "./components/popup/LogoutDelete.js";
 import DisplayEvent from "./components/DisplayEvent.js";
 import AddEvent from "./components/AddEvent.js";
-
+import Window from "./components/pages/Window.js";
 //
 
 import loadingSvg from "./asset/loading.svg";
 import { GlobalContex } from "./context/Context";
 import { ToastContainer } from "react-toastify";
+
 import { useEffect, useContext, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useNavigate
+  useNavigate,
+  useLocation
 } from "react-router-dom";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
+import PageNotFound from "./components/pages/PageNotFound";
 
 function App() {
+  const location = useLocation();
   const navigate = useNavigate();
   const URL = process.env.REACT_APP_URL;
   const [dataLoading, setDataLoading] = useState(false);
   const { setUserData, notify, popup, toggleAddEvent, toggleDisplayEvent } =
     useContext(GlobalContex);
+
   useEffect(() => {
-    getUSer();
+    if (!location.pathname.split("/").includes("window")) getUser();
   }, []);
-  async function getUSer() {
+
+  async function getUser() {
     setDataLoading(true);
 
     try {
@@ -79,6 +85,8 @@ function App() {
           />
           <Route path="/events" element={<Events />} />
           <Route path="/dashbord" element={<Dashbord />} />
+          <Route path="/window/:eventId" element={<Window />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       )}
 

@@ -36,11 +36,12 @@ const addEvent = async (req, res, next) => {
     city,
     address,
     organizerName,
+    likes: [],
     status: status == "true" ? true : false,
     publishDate: new Date(publishDate)
   });
 
-  const eventUrl = `${process.env.CLIENT_URL}/api/window?userId=${eventInfo._id}`;
+  const eventUrl = `${process.env.CLIENT_URL}/window/${eventInfo._id}`;
 
   try {
     const newEvent = await eventInfo.save();
@@ -63,6 +64,8 @@ const editEvent = async (req, res, next) => {
   req.body["images"] = req.user.images;
   req.body["status"] = req.body.status == "false" ? false : true;
   req.body["publishDate"] = new Date(req.body.publishDate);
+  req.body["likes"] = JSON.parse(req.body.likes);
+
   try {
     const result = await eventModel.findByIdAndUpdate(
       req.body.eventId,
@@ -88,6 +91,9 @@ const getEvent = async (req, res, next) => {
   if (!eventId) return next(new CustomError("Event Id is Required", 400));
   try {
     const event = await eventModel.findById(eventId);
+    if (!event) {
+      return next(new CustomError("Invalid Id", 400));
+    }
     res.status(200).json({ success: true, data: event });
   } catch (error) {
     next(error);
