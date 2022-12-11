@@ -70,7 +70,8 @@ const editEvent = async (req, res, next) => {
     const result = await eventModel.findByIdAndUpdate(
       req.body.eventId,
       req.body,
-      { new: true }
+
+      { runValidators: true, new: true }
     );
     res.status(200).json({ success: true, data: result });
   } catch (error) {
