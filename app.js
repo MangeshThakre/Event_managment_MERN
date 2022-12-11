@@ -14,7 +14,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://localhost:8081",
-      "https://event-managmentmern-mern.up.railway.app"
+      "https://event-managment-mern.up.railway.app"
     ],
     credentials: true
   })
