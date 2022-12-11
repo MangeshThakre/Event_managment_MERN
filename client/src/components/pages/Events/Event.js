@@ -41,7 +41,10 @@ function Event({ event, i }) {
   }, [status, likes]);
 
   async function handleUpdate() {
+    console.log(event.description.length);
+
     const formData = new FormData();
+
     for (const key in event) {
       if (key == "images") {
         formData.append("images", JSON.stringify(event.images));

@@ -79,14 +79,14 @@ function Window() {
           </div>
           {/* img end */}
           <div className="flex flex-col gap-4 mt-6">
-            <div className="flex">
+            <div className="flex max-w-lg text-left">
               <p className=" font-semibold text-black   text-start  w-32  mr-5">
                 Event Title :
               </p>
               <p>{event.title}</p>
             </div>
-            <div className="flex">
-              <p className=" font-semibold text-black   text-start  w-32  mr-5">
+            <div className="flex max-w-lg text-left">
+              <p className=" font-semibold text-black   text-start   w-36  mr-5">
                 Description :
               </p>
               <p>{event.description}</p>
@@ -135,7 +135,7 @@ function Window() {
               <p className=" font-semibold text-black   text-start  w-32  mr-5">
                 Total likes :
               </p>
-              <p>{event.likes.length}</p>
+              <p>{event.likes?.length}</p>
             </div>
             <div className="flex">
               <p className=" font-semibold text-black   text-start  w-32    mr-5 ">

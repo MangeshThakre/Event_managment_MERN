@@ -86,7 +86,7 @@ function App() {
           <Route path="/events" element={<Events />} />
           <Route path="/dashbord" element={<Dashbord />} />
           <Route path="/window/:eventId" element={<Window />} />
-          <Route path="*" element={<PageNotFound />} />
+          {/* <Route path="*" element={<PageNotFound />} /> */}
         </Routes>
       )}
 
