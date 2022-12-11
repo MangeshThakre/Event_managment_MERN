@@ -18,7 +18,7 @@ function Events() {
     from: new Date(Date.now() - 24 * 60 * 60 * 1000),
     to: new Date(Date.now()),
     page: 1,
-    limit: 3
+    limit: 10
   });
   useEffect(() => {
     getEvents();
