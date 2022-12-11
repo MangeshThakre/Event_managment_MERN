@@ -1,8 +1,10 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # Ignore everything
-*
-
+/public
+/src
+/package-lock.json
+/package.json
+/README.md
+/tailwind.config.js
 # But not these files...
-!.gitignore
-!build
