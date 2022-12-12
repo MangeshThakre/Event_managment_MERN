@@ -38,7 +38,11 @@ function App() {
     useContext(GlobalContex);
 
   useEffect(() => {
-    if (!location.pathname.split("/").includes("window")) getUser();
+    if (
+      !location.pathname.split("/").includes("window") &&
+      !location.pathname.split("/").includes("reset_password")
+    )
+      getUser();
   }, []);
 
   async function getUser() {
@@ -84,9 +88,9 @@ function App() {
             element={<OtpVerification />}
           />
           <Route path="/events" element={<Events />} />
-          <Route path="/dashbord" element={<Dashbord />} />
+          <Route path={"/dashbord"} element={<Dashbord />} />
           <Route path="/window/:eventId" element={<Window />} />
-          {/* <Route path="*" element={<PageNotFound />} /> */}
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       )}
 

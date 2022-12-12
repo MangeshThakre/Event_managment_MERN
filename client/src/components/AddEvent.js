@@ -110,10 +110,11 @@ function AddEvent() {
           withCredentials: true,
           data: formData
         });
-        if (response.data.success) {
+        const data = await response.data;
+        if (data.success) {
           setEventData({
             ...eventData,
-            data: [...eventData.data, response.data.data.data]
+            data: [...eventData.data, data.data]
           });
           notify("New Event created successfuly", "success");
         }

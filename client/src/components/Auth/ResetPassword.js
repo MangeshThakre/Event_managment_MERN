@@ -33,6 +33,7 @@ function ResetPassword() {
         setresetPasswordLoading(false);
         notify(response.data.message, "success");
         window.location.reload();
+        navigate("/events");
       }
     } catch (error) {
       notify(error.response.data.message, "error");

@@ -23,7 +23,7 @@ function OtpVerification() {
       setResetOptLoading(false);
       if (response.data.success) {
         notify(response.data.message, "success");
-        // navigate("/events");
+        navigate("/events");
         window.location.reload();
       }
     } catch (error) {
