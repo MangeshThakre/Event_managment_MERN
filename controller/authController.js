@@ -186,6 +186,7 @@ const forgotPassword = async (req, res, next) => {
     //  create  reset url
     const resetURL = `${process.env.CLIENT_URL}/reset_password/${forgotPasswordToken}`;
 
+    console.log(process.env.CLIENT_URL);
     // create mail content
     const mailOptions = {
       from: process.env.EMAIL_ID,
